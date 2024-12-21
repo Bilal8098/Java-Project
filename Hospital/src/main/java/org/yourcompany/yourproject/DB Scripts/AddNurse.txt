@@ -1,0 +1,43 @@
+CREATE OR REPLACE PROCEDURE AddNurse(
+nurId NUMBER,
+nurName VARCHAR2,
+nurpass VARCHAR2,
+nurAddress VARCHAR2,
+nurDepartment VARCHAR2,
+nurAge NUMBER,
+nurPhone VARCHAR2,
+nurEmail VARCHAR2,
+nurSalary NUMBER,
+nurShift NUMBER
+) IS
+BEGIN
+EXECUTE IMMEDIATE 'CREATE USER ' || nurName || ' IDENTIFIED BY ' || nurpass;
+EXECUTE IMMEDIATE 'GRANT CONNECT TO ' || nurName;
+EXECUTE IMMEDIATE 'GRANT SELECT ON HOSADMIN.Appointment TO ' || nurName;
+EXECUTE IMMEDIATE 'GRANT SELECT ON HOSADMIN.Inventory TO ' || nurName;
+EXECUTE IMMEDIATE 'GRANT INSERT ON HOSADMIN.Preception TO ' || nurName;
+EXECUTE IMMEDIATE 'GRANT SELECT ON HOSADMIN.Rooms TO ' || nurName;
+
+INSERT INTO HospitalUsers(UserId, UserName, UserAddress,
+UserAge, UserPhone, UserEmail, UserRole)
+VALUES (nurId, nurName, nurAddress,
+nurAge, nurPhone, nurEmail, 'Nurse');
+
+INSERT INTO Nurses(nurseId, nurseDepartmenr,
+shift, Salary) VALUES(nurId, nurDepartment,
+nurShift, nurSalary);
+END;
+
+DECLARE
+ID NUMBER;
+NAME VARCHAR2(20);
+PASSW VARCHAR2(30);
+ADDRESS VARCHAR2(50);
+DEPT VARCHAR2(20);
+AGE NUMBER;
+PHONE VARCHAR2(20);
+EMAIL VARCHAR2(30);
+SALARY NUMBER(10,2);
+BEGIN
+    AddNurse(ID, NAME, PASSW, ADDRESS, DEPT, AGE, PHONE, EMAIL, SALARY);
+END;
