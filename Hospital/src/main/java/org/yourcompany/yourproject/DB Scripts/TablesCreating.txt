@@ -28,7 +28,6 @@ NOCACHE;
 CREATE TABLE Departments(
 DeptId NUMBER DEFAULT DEPTSEQ.NEXTVAL PRIMARY KEY,
 DeptName VARCHAR(20),
-DeptHead NUMBER REFERENCES HospitalUsers(UserId),
 NumberOfStaff NUMBER
 );
 
@@ -37,6 +36,12 @@ DocId NUMBER REFERENCES HospitalUsers(userId),
 Department NUMBER REFERENCES Departments(DeptId),
 Salary NUMBER(10,2)
 );
+
+create table Accountants(
+AccId REFERENCES HospitalUsers(UserId),
+Salary NUMBER(10,2)
+);
+
 
 CREATE TABLE Nurses(
 nurseId NUMBER REFERENCES HospitalUsers(UserId),
