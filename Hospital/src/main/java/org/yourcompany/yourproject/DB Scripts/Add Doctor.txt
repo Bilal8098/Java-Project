@@ -1,5 +1,4 @@
 CREATE OR REPLACE PROCEDURE AddDoctor(
-    docId NUMBER,
     docName VARCHAR2,
     docPass VARCHAR2,
     docAddress VARCHAR2,
@@ -22,29 +21,27 @@ WHERE DEPTNAME = DOCDEPARTMENT;
     EXECUTE IMMEDIATE 'GRANT SELECT ON Nurses TO ' || docName;
     EXECUTE IMMEDIATE 'GRANT INSERT ON PRESCIPTION TO ' || docName;
 
-    INSERT INTO HospitalUsers(UserId, UserName, UserAddress,
+    INSERT INTO HospitalUsers(UserName, UserAddress,
     UserAge, UserPhone, UserEmail, UserRole)
-    VALUES (docId, docName, docAddress,
+    VALUES (docName, docAddress,
     docAge, docPhone, docEmail, 'Doctor');
 
     INSERT INTO DOCTORS(DocId, Department, Salary)
-    VALUES (docId, DEPID, docSalary);
+    VALUES (userseq.currval, DEPID, docSalary);
 END;
 /
 
 DECLARE
-    p_docId        NUMBER := 1001;
-    p_docName      VARCHAR2(50) := 'DrJohnDoe';
-    p_docPass      VARCHAR2(50) := 'SecurePass123';
-    p_docAddress   VARCHAR2(100) := '123 Medical St';
-    p_docDepartment VARCHAR2(50) := 'Cardiology';
+    p_docName      VARCHAR2(50);
+    p_docPass      VARCHAR2(50);
+    p_docAddress   VARCHAR2(100);
+    p_docDepartment VARCHAR2(50);
     p_docAge       NUMBER := 45;
-    p_docPhone     VARCHAR2(20) := '123-456-7890';
-    p_docEmail     VARCHAR2(100) := 'dr.john@e.com';
-    p_docSalary    NUMBER := 120000;
+    p_docPhone     VARCHAR2(20);
+    p_docEmail     VARCHAR2(100);
+    p_docSalary    NUMBER;
 BEGIN
     AddDoctor(
-        docId => p_docId,
         docName => p_docName,
         docPass => p_docPass,
         docAddress => p_docAddress,

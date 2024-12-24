@@ -1,6 +1,5 @@
 CREATE OR REPLACE PROCEDURE AddAccountant(
     AccName IN VARCHAR2,
-    AccId IN NUMBER,
     AccAddress IN VARCHAR2,
     AccAge IN NUMBER,
     AccPhone IN VARCHAR2,
@@ -21,18 +20,17 @@ BEGIN
     EXECUTE IMMEDIATE 'GRANT SELECT ON Bills TO ' || AccName;
     EXECUTE IMMEDIATE 'GRANT SELECT ON PaymentMethod TO ' || AccName;
     EXECUTE IMMEDIATE 'GRANT SELECT ON Inventory TO ' || AccName;
-    EXECUTE IMMEDIATE 'INSERT INTO HospitalUsers(UserId, UserName, UserAddress, 
+    EXECUTE IMMEDIATE 'INSERT INTO HospitalUsers(UserName, UserAddress, 
         UserAge, UserPhone, UserEmail, UserRole) 
-        VALUES (' || AccId || ', ''' || AccName || ''', ''' || AccAddress || ''', 
+        VALUES (''' || AccName || ''', ''' || AccAddress || ''', 
         ' || AccAge || ', ''' || AccPhone || ''', ''' || AccEmail || ''', ''Accountant'')';
     
     EXECUTE IMMEDIATE 'INSERT INTO Accountants(AccId, Salary) 
-        VALUES (' || AccId || ', ' || AccSalary || ')';
+        VALUES (' || userseq.currval || ', ' || AccSalary || ')';
     
     COMMIT; 
 END AddAccountant;
 /
-
 
 DECLARE
     p_AccName    VARCHAR2(50);
