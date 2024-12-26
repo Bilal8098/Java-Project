@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE AddAdmin(
+    userName VARCHAR,
+    userAddress VARCHAR,
+    userPhone VARCHAR,
+    userEmail VARCHAR,
+    userAge INT,
+    salary NUMERIC(10,2)
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    newUserId INT;
+BEGIN
+    -- Insert into HospitalUsers
+    INSERT INTO HospitalUsers(UserName, UserAddress, UserPhone, UserEmail, UserAge, UserRole)
+    VALUES (userName, userAddress, userPhone, userEmail, userAge, 'Admin')
+    RETURNING userId INTO newUserId;
+
+    -- Insert into Admins
+    INSERT INTO Admins(AdminId, Salary)
+    VALUES (newUserId, salary);
+END;
+$$;

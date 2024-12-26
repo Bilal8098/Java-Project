@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE AddPatient(
+    userName VARCHAR,
+    userAddress VARCHAR,
+    userPhone VARCHAR,
+    userEmail VARCHAR,
+    userAge INT,
+    historyDept INT
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    newUserId INT;
+BEGIN
+    -- Insert into HospitalUsers
+    INSERT INTO HospitalUsers(UserName, UserAddress, UserPhone, UserEmail, UserAge, UserRole)
+    VALUES (userName, userAddress, userPhone, userEmail, userAge, 'Patient')
+    RETURNING userId INTO newUserId;
+
+    -- Insert into Patients
+    INSERT INTO Patient(PatientId, HistoryDept)
+    VALUES (newUserId, historyDept);
+END;
+$$;

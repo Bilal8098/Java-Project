@@ -1,0 +1,23 @@
+CREATE OR REPLACE PROCEDURE AddAccountant(
+    userName VARCHAR,
+    userAddress VARCHAR,
+    userPhone VARCHAR,
+    userEmail VARCHAR,
+    userAge INT,
+    salary NUMERIC(10,2)
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    newUserId INT;
+BEGIN
+    -- Insert into HospitalUsers
+    INSERT INTO HospitalUsers(UserName, UserAddress, UserPhone, UserEmail, UserAge, UserRole)
+    VALUES (userName, userAddress, userPhone, userEmail, userAge, 'Accountant')
+    RETURNING userId INTO newUserId;
+
+    -- Insert into Accountants
+    INSERT INTO Accountants(AccId, Salary)
+    VALUES (newUserId, salary);
+END;
+$$;

@@ -1,0 +1,183 @@
+-- Sequences
+CREATE SEQUENCE userSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- HospitalUsers table
+CREATE TABLE HospitalUsers (
+    userId SERIAL PRIMARY KEY,
+    UserName VARCHAR(30),
+    UserAddress VARCHAR(50),
+    UserPhone VARCHAR(20),
+    UserEMAIL VARCHAR(30),
+    UserAge INT,
+    UserRole VARCHAR(20)
+);
+
+-- Admins table
+CREATE TABLE Admins (
+    AdminId INT REFERENCES HospitalUsers(userId),
+    SALARY NUMERIC(10,2)
+);
+
+-- Sequence for Departments table
+CREATE SEQUENCE DeptSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Departments table
+CREATE TABLE Departments (
+    DeptId INT DEFAULT nextval('DeptSeq') PRIMARY KEY,
+    DeptName VARCHAR(20),
+    NumberOfStaff INT
+);
+
+-- Doctors table
+CREATE TABLE DOCTORS (
+    DocId INT REFERENCES HospitalUsers(userId),
+    Department INT REFERENCES Departments(DeptId),
+    Salary NUMERIC(10,2)
+);
+
+-- Accountants table
+CREATE TABLE Accountants (
+    AccId INT REFERENCES HospitalUsers(userId),
+    Salary NUMERIC(10,2)
+);
+
+-- Nurses table
+CREATE TABLE Nurses (
+    nurseId INT REFERENCES HospitalUsers(userId),
+    DeptId INT REFERENCES Departments(DeptId),
+    Shift VARCHAR(30),
+    SALARY NUMERIC(10,2)
+);
+
+-- Patients table
+CREATE TABLE PATIENT (
+    PatientId INT REFERENCES HospitalUsers(userId),
+    historyDept INT REFERENCES Departments(DeptId)
+);
+
+-- Appointment sequence
+CREATE SEQUENCE AppointSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Appointment table
+CREATE TABLE Appointment (
+    AppointmentId INT DEFAULT nextval('AppointSeq') PRIMARY KEY,
+    DateOfAppointment DATE,
+    PatientId INT REFERENCES HospitalUsers(userId),
+    DoctorId INT REFERENCES HospitalUsers(userId)
+);
+
+-- Inventory sequence
+CREATE SEQUENCE InventorySeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Inventory table
+CREATE TABLE Inventory (
+    ItemId INT DEFAULT nextval('InventorySeq') PRIMARY KEY,
+    ItemName VARCHAR(30),
+    Quantity INT
+);
+
+-- Payment method sequence
+CREATE SEQUENCE PaymentSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- PaymentMethod table
+CREATE TABLE PaymentMethod (
+    PaymentMethodId INT DEFAULT nextval('PaymentSeq') PRIMARY KEY,
+    PaymentMethodName VARCHAR(30)
+);
+
+-- Income sequence
+CREATE SEQUENCE IncomeSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Income table
+CREATE TABLE Income (
+    IncomeID INT DEFAULT nextval('IncomeSeq') PRIMARY KEY,
+    Amount NUMERIC(10,2),
+    IncomeDate DATE,
+    Description VARCHAR(100),
+    PaymentMethod INT REFERENCES PaymentMethod(PaymentMethodId)
+);
+
+-- Expense sequence
+CREATE SEQUENCE ExpenseSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Expenses table
+CREATE TABLE Expenses (
+    ExpenseID INT DEFAULT nextval('ExpenseSeq') PRIMARY KEY,
+    Amount NUMERIC(10,2),
+    ExpenseDate DATE,
+    Description VARCHAR(100),
+    PaymentMethod INT REFERENCES PaymentMethod(PaymentMethodId)
+);
+
+-- Bill sequence
+CREATE SEQUENCE BillSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Bills table
+CREATE TABLE Bills (
+    BillId INT DEFAULT nextval('BillSeq') PRIMARY KEY,
+    PatientId INT REFERENCES HospitalUsers(userId),
+    TotalAmount NUMERIC(10,2),
+    PaymentMethod INT REFERENCES PaymentMethod(PaymentMethodId),
+    AttendingDoctor INT REFERENCES HospitalUsers(userId)
+);
+
+-- Prescription sequence
+CREATE SEQUENCE PresciptionSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Prescription table
+CREATE TABLE Presciption (
+    PresciptionId INT DEFAULT nextval('PresciptionSeq') PRIMARY KEY,
+    PatientId INT REFERENCES HospitalUsers(userId),
+    Medications VARCHAR(100)
+);
+
+-- Room sequence
+CREATE SEQUENCE RoomSeq
+START WITH 1
+INCREMENT BY 1
+NO MAXVALUE
+CACHE 1;
+
+-- Rooms table
+CREATE TABLE ROOMS (
+    RoomId INT DEFAULT nextval('RoomSeq') PRIMARY KEY,
+    isOccupied VARCHAR(5) CHECK(isOccupied = 'Yes' OR isOccupied = 'No'),
+    DailyRate NUMERIC(10,2),
+    PatientId INT REFERENCES HospitalUsers(userId)
+);
